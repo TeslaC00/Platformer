@@ -17,12 +17,7 @@ local fixedTimeStep = _G.FIXED_TIME_STEP
 function Game:load()
     -- player entities and world
     player = Player:new(World, 300, 250)
-    player:load(150, 150)
-    print(player.body:getMass())
-    print(player.body:getGravityScale())
-
     enemy = Enemy:new(World, 500, 250)
-    enemy:load(500, 250)
 
     wall.x, wall.y = 0, 400
     wall.width, wall.height = love.graphics.getWidth(), 50
@@ -33,10 +28,8 @@ function Game:load()
 end
 
 function Game:update(dt)
-    Play = love.window.hasFocus()
-    if not Play then
-        return
-    end
+    Play = love.window.hasFocus() and Play
+    if not Play then return end
 
     -- clamp delta time to avoid large updates
     if dt > 0.1 then dt = 0.1 end
@@ -63,8 +56,13 @@ function Game:keypressed(key)
     player:keypressed(key)
 end
 
+function Game:playPause()
+    Play = not Play
+end
+
 function Game:reset()
-    player:reset()
+    player:reset(300, 250)
+    enemy:reset(500, 250)
 end
 
 return Game

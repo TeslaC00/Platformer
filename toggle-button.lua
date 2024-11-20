@@ -1,17 +1,16 @@
-local ToggleButton = {}
+local Button = require "button"
+
+local ToggleButton = setmetatable({}, { __index = Button })
 ToggleButton.__index = ToggleButton
 
-function ToggleButton:new(x, y, width, height, text, font)
-    return setmetatable({
-        x = x,
-        y = y,
-        width = width,
-        height = height,
-        text = text,
-        font = font,
-        on = false,
-        timer = nil
-    }, ToggleButton)
+function ToggleButton:new(x, y, width, height, text, font, on, textColor, onColor, offColor, callback)
+    local bgColor = onColor and on or offColor
+    local toggleButton = Button.new(self, x, y, width, height, text, font, textColor, bgColor,
+        callback)
+    toggleButton.on = on or false
+    toggleButton.onColor = onColor
+    toggleButton.offColor = offColor
+    return setmetatable(toggleButton, ToggleButton)
 end
 
 function ToggleButton:update(dt)
@@ -23,7 +22,7 @@ function ToggleButton:update(dt)
     else
         if self:hover() and love.mouse.isDown(1) then
             self.on = not self.on
-            _G.DEBUGGING = self.on
+            if self.callback then self.callback(self.on) end
             self.timer = 0.1
         end
     end
@@ -31,22 +30,11 @@ end
 
 function ToggleButton:draw()
     if self.on then
-        love.graphics.setColor(0, 1, 0)
+        self.bgColor = self.onColor
     else
-        love.graphics.setColor(1, 0, 0)
+        self.bgColor = self.offColor
     end
-    love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
-    love.graphics.setColor(1, 1, 1)
-    local x = self.x + (self.width - self.font:getWidth(self.text)) * 0.5
-    local y = self.y + (self.height - self.font:getHeight()) * 0.5
-    love.graphics.setFont(self.font)
-    love.graphics.print(self.text, x, y)
-end
-
-function ToggleButton:hover()
-    local x, y = love.mouse.getX(), love.mouse.getY()
-    return x >= self.x and x <= self.x + self.width and
-        y >= self.y and y <= self.y + self.height
+    Button.draw(self)
 end
 
 return ToggleButton

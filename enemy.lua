@@ -1,7 +1,8 @@
-local Enemy = {}
-Enemy.__index = Enemy
-
+local Character = require "character"
 local Animation = require "animation"
+
+local Enemy = setmetatable({}, { __index = Character })
+Enemy.__index = Enemy
 
 local EnemyState = {
     HIT_1 = 1,
@@ -10,46 +11,6 @@ local EnemyState = {
     RUN = 4,
     WALK = 5
 }
-
--- function love.load()
---     -- Specify the directory you want to list files from
---     local directory = "assets/images"
-
---     -- Get all items in the directory
---     local items = love.filesystem.getDirectoryItems(directory)
-
---     -- Loop through each item
---     for _, item in ipairs(items) do
---         local info = love.filesystem.getInfo(directory .. "/" .. item)
-
---         if info and info.type == "file" then
---             print("File: " .. item)
---             -- Load or process the file as needed
---         elseif info and info.type == "directory" then
---             print("Directory: " .. item)
---             -- Recursively process subdirectories if needed
---         end
---     end
--- end
-
-
--- local imageExtensions = {png = true, jpg = true, jpeg = true}
-
--- function love.load()
---     local directory = "assets/images"
---     local items = love.filesystem.getDirectoryItems(directory)
-
---     for _, item in ipairs(items) do
---         local info = love.filesystem.getInfo(directory .. "/" .. item)
---         local extension = item:match("^.+(%..+)$")
-
---         if info and info.type == "file" and extension and imageExtensions[extension:sub(2)] then
---             print("Image File: " .. item)
---             -- Load or process the image file
---         end
---     end
--- end
-
 
 local imagePaths = {
     "assets/AngryPig/Hit 1 (36x30).png",
@@ -60,33 +21,24 @@ local imagePaths = {
 }
 
 function Enemy:new(world, x, y)
-    local enemy = setmetatable({
-        width = 36,
-        height = 30,
-        xOffset = 0,
-        yOffset = 0,
-        speed = 100,
-        runSpeed = 200,
-        scale = 3,
-        scaleX = 3,
-        scaleY = 3,
-        facingRight = false,
-        state = EnemyState.IDLE,
-    }, Enemy)
+    local enemy = Character.new(self, world, x, y)
+    setmetatable(enemy, Enemy)
+
+    enemy.width = 36
+    enemy.height = 30
+    enemy.xOffset = 0
+    enemy.yOffset = 0
+    enemy.runSpeed = 200
+    enemy.facingRight = false
+    enemy.state = EnemyState.IDLE
+
     enemy.animations = Animation:newAnimations(imagePaths, enemy.width, enemy.height)
-    enemy.body = love.physics.newBody(world, x, y, "dynamic")
     enemy.shape = love.physics.newRectangleShape(0, 6, 25 * enemy.scale, 26 * enemy.scale)
     enemy.fixture = love.physics.newFixture(enemy.body, enemy.shape)
     enemy.fixture:setDensity(2)
     enemy.body:resetMassData()
-    return enemy
-end
 
-function Enemy:load(x, y)
-    self.state = EnemyState.IDLE
-    self.facingRight = false
-    self.scaleX = self.scale
-    self.body:setPosition(x, y)
+    return enemy
 end
 
 function Enemy:update(dt)
@@ -124,7 +76,6 @@ function Enemy:update(dt)
 end
 
 function Enemy:draw()
-    -- print("Enemy Draw called")
     local x, y = self.body:getPosition()
     local ox, oy = self.width * 0.5, self.height * 0.5
     self.animations[self.state]:draw(x, y, 0, self.scaleX, self.scaleY, ox, oy)
@@ -143,24 +94,10 @@ function Enemy:draw()
     end
 end
 
-function Enemy:flipX()
-    if self.scaleX > 0 and not self.flippedX then
-        self.flippedX = true
-        self.scaleX = self.scaleX * -1
-    elseif self.scaleX < 0 and self.flippedX then
-        self.flippedX = false
-        self.scaleX = self.scaleX * -1
-    end
-end
-
-function Enemy:flipY()
-    if self.scaleY > 0 and not self.flippedY then
-        self.flippedY = true
-        self.scaleY = self.scaleY * -1
-    elseif self.scaleY < 0 and self.flippedY then
-        self.flippedY = false
-        self.scaleY = self.scaleY * -1
-    end
+function Enemy:reset(x, y)
+    Character.reset(self, x, y)
+    self.state = EnemyState.IDLE
+    self.facingRight = false
 end
 
 return Enemy

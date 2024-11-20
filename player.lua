@@ -1,7 +1,8 @@
-local Player = {}
-Player.__index = Player
-
+local Character = require "character"
 local Animation = require "animation"
+
+local Player = setmetatable({}, { __index = Character })
+Player.__index = Player
 
 local PlayerState = {
     DOUBLE_JUMP = 1,
@@ -24,40 +25,25 @@ local imagePaths = {
 }
 
 function Player:new(world, x, y)
-    -- shift shape by (width/2 + offsetX) * scale, (height/2 + offsetY) * scale
-    local player = setmetatable({
-        -- constants
-        width = 32,
-        height = 32,
-        xOffset = 7,
-        yOffset = 6,
-        speed = 150,
-        scale = 3,
-        scaleX = 3,
-        scaleY = 3,
-        jump = 400,
-        -- variables
-        flippedX = false,
-        flippedY = false,
-        facingRight = true,
-        state = PlayerState.IDLE,
-    }, Player)
+    local player = Character.new(self, world, x, y)
+    setmetatable(player, Player)
+
+    player.xOffset = 7
+    player.yOffset = 6
+    player.speed = 150
+    player.jump = 400
+    player.facingRight = true
+    player.state = PlayerState.IDLE
+
     player.animations = Animation:newAnimations(imagePaths, player.width, player.height)
-    player.body = love.physics.newBody(world, x, y, "dynamic")
     player.body:setFixedRotation(true)
     player.shape = love.physics.newRectangleShape(0, 11, 17 * player.scale,
         24 * player.scale)
     player.fixture = love.physics.newFixture(player.body, player.shape)
     player.fixture:setDensity(5)
     player.body:resetMassData()
-    return player
-end
 
-function Player:load(x, y)
-    self.state = PlayerState.IDLE
-    self.facingRight = true
-    self.scaleX = self.scale
-    self.body:setPosition(x, y)
+    return player
 end
 
 function Player:update(dt)
@@ -139,24 +125,10 @@ function Player:keypressed(key)
     end
 end
 
-function Player:flipX()
-    if self.scaleX > 0 and not self.flippedX then
-        self.flippedX = true
-        self.scaleX = self.scaleX * -1
-    elseif self.scaleX < 0 and self.flippedX then
-        self.flippedX = false
-        self.scaleX = self.scaleX * -1
-    end
-end
-
-function Player:flipY()
-    if self.scaleY > 0 and not self.flippedY then
-        self.flippedY = true
-        self.scaleY = self.scaleY * -1
-    elseif self.scaleY < 0 and self.flippedY then
-        self.flippedY = false
-        self.scaleY = self.scaleY * -1
-    end
+function Player:reset(x, y)
+    Character.reset(self, x, y)
+    self.state = PlayerState.IDLE
+    self.facingRight = true
 end
 
 return Player
