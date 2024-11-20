@@ -1,0 +1,14 @@
+{
+    "Lua.runtime.version": "LuaJIT",
+    "Lua.diagnostics.globals": [
+        "love"
+    ],
+    "Lua.workspace.library": [
+        "${3rd}/love2d/library",
+        "${addons}/love2d/module/library"
+    ],
+    "Lua.workspace.checkThirdParty": false,
+    "Lua.runtime.special": {
+        "love.filesystem.load": "loadfile"
+    }
+}

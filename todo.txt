@@ -1,0 +1,3 @@
+Improvements
+- Animations
+    - Add frame duration is frame creation
