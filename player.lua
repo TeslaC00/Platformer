@@ -1,7 +1,7 @@
-Player = {}
+local Player = {}
 Player.__index = Player
 
-require "animation"
+local Animation = require "animation"
 
 local PlayerState = {
     DOUBLE_JUMP = 1,
@@ -159,4 +159,4 @@ function Player:flipY()
     end
 end
 
--- return Player
+return Player

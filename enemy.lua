@@ -1,7 +1,7 @@
-Enemy = {}
+local Enemy = {}
 Enemy.__index = Enemy
 
-require "animation"
+local Animation = require "animation"
 
 local EnemyState = {
     HIT_1 = 1,
@@ -10,6 +10,46 @@ local EnemyState = {
     RUN = 4,
     WALK = 5
 }
+
+-- function love.load()
+--     -- Specify the directory you want to list files from
+--     local directory = "assets/images"
+
+--     -- Get all items in the directory
+--     local items = love.filesystem.getDirectoryItems(directory)
+
+--     -- Loop through each item
+--     for _, item in ipairs(items) do
+--         local info = love.filesystem.getInfo(directory .. "/" .. item)
+
+--         if info and info.type == "file" then
+--             print("File: " .. item)
+--             -- Load or process the file as needed
+--         elseif info and info.type == "directory" then
+--             print("Directory: " .. item)
+--             -- Recursively process subdirectories if needed
+--         end
+--     end
+-- end
+
+
+-- local imageExtensions = {png = true, jpg = true, jpeg = true}
+
+-- function love.load()
+--     local directory = "assets/images"
+--     local items = love.filesystem.getDirectoryItems(directory)
+
+--     for _, item in ipairs(items) do
+--         local info = love.filesystem.getInfo(directory .. "/" .. item)
+--         local extension = item:match("^.+(%..+)$")
+
+--         if info and info.type == "file" and extension and imageExtensions[extension:sub(2)] then
+--             print("Image File: " .. item)
+--             -- Load or process the image file
+--         end
+--     end
+-- end
+
 
 local imagePaths = {
     "assets/AngryPig/Hit 1 (36x30).png",
@@ -123,4 +163,4 @@ function Enemy:flipY()
     end
 end
 
--- return Enemy
+return Enemy

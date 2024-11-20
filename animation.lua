@@ -1,6 +1,4 @@
-require "globals"
-
-Animation = {}
+local Animation = {}
 Animation.__index = Animation
 
 AnimationState = {
@@ -61,4 +59,4 @@ function Animation:resume()
     self.status = AnimationState.PLAYING
 end
 
--- return Animation
+return Animation

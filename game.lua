@@ -1,4 +1,7 @@
-Game = {}
+local Player = require "player"
+local Enemy = require "enemy"
+
+local Game = {}
 Game.__index = Game
 
 World = love.physics.newWorld(0, _G.PIXELS_PER_METER * 30, true)
@@ -51,10 +54,8 @@ end
 function Game:draw()
     player:draw()
     enemy:draw()
-    local x1, y1, x2, y2 = wall.fixture:getBoundingBox(1)
     love.graphics.setColor(1, 0, 0)
-    love.graphics.polygon("line",wall.body:getWorldPoints(wall.shape:getPoints()))
-    love.graphics.rectangle("line", x1, y1, x2 - x1, y2 - y1)
+    love.graphics.polygon("line", wall.body:getWorldPoints(wall.shape:getPoints()))
     love.graphics.setColor(1, 1, 1)
 end
 
@@ -65,3 +66,5 @@ end
 function Game:reset()
     player:reset()
 end
+
+return Game
