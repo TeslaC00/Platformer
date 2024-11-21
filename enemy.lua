@@ -12,14 +12,6 @@ local EnemyState = {
     WALK = 5
 }
 
-local imagePaths = {
-    "assets/AngryPig/Hit 1 (36x30).png",
-    "assets/AngryPig/Hit 2 (36x30).png",
-    "assets/AngryPig/Idle (36x30).png",
-    "assets/AngryPig/Run (36x30).png",
-    "assets/AngryPig/Walk (36x30).png"
-}
-
 function Enemy:new(world, x, y)
     local enemy = Character.new(self, world, x, y)
     setmetatable(enemy, Enemy)
@@ -32,7 +24,7 @@ function Enemy:new(world, x, y)
     enemy.facingRight = false
     enemy.state = EnemyState.IDLE
 
-    enemy.animations = Animation:newAnimations(imagePaths, enemy.width, enemy.height)
+    enemy.animations = Animation:newAnimations("assets/AngryPig")
     enemy.shape = love.physics.newRectangleShape(0, 6, 25 * enemy.scale, 26 * enemy.scale)
     enemy.fixture = love.physics.newFixture(enemy.body, enemy.shape)
     enemy.fixture:setDensity(2)

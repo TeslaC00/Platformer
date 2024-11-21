@@ -6,6 +6,17 @@ AnimationState = {
     PAUSE = 2
 }
 
+local function parseImageFilename(filename)
+    -- can read frames count too from regex
+    local animationName, frameWidth, frameHeight = filename:match("^([a-zA-Z0-9]+)_(%d+)x(%d+)_%d+%.png$")
+    if animationName and frameWidth and frameHeight then
+        return animationName, tonumber(frameWidth), tonumber(frameHeight)
+    else
+        print("[ERROR]: Cannot apply regex on the file: ", filename)
+        return nil, nil, nil
+    end
+end
+
 local function createFrames(image, frameWidth, frameHeight)
     local maxFrames = image:getWidth() / frameWidth
     local frames = {}
@@ -29,11 +40,21 @@ function Animation:new(imagePath, frameWidth, frameHeight, frameDuration)
     }, Animation)
 end
 
-function Animation:newAnimations(imagePaths, frameWidth, frameHeight, frameDuration)
+function Animation:newAnimations(imageDir, frameDuration)
     local animations = {}
-    for _, value in ipairs(imagePaths) do
-        table.insert(animations, self:new(value, frameWidth, frameHeight, frameDuration))
+
+    local items = love.filesystem.getDirectoryItems(imageDir)
+    for _, item in ipairs(items) do
+        local filePath = imageDir .. "/" .. item
+        local info = love.filesystem.getInfo(filePath)
+        if info and info.type == "file" then
+            local _, width, height = parseImageFilename(item)
+            if width and height then
+                table.insert(animations, self:new(filePath, width, height, frameDuration))
+            end
+        end
     end
+
     return animations
 end
 

@@ -1,0 +1,19 @@
+MyGame/
+|-- assets/
+|   |-- images/
+|   |   |-- player.png
+|   |   |-- enemy.png
+|   |-- sounds/
+|       |-- jump.wav
+|       |-- hit.wav
+|-- scripts/
+|   |-- main.lua
+|   |-- player.lua
+|   |-- enemy.lua
+|-- scenes/
+|   |-- menu.lua
+|   |-- game.lua
+|-- entities/
+|   |-- button.lua
+|   |-- character.lua
+|-- conf.lua

@@ -14,16 +14,6 @@ local PlayerState = {
     WALL_JUMP = 7
 }
 
-local imagePaths = {
-    "assets/Virtual Guy/Double Jump (32x32).png",
-    "assets/Virtual Guy/Fall (32x32).png",
-    "assets/Virtual Guy/Hit (32x32).png",
-    "assets/Virtual Guy/Idle (32x32).png",
-    "assets/Virtual Guy/Jump (32x32).png",
-    "assets/Virtual Guy/Run (32x32).png",
-    "assets/Virtual Guy/Wall Jump (32x32).png"
-}
-
 function Player:new(world, x, y)
     local player = Character.new(self, world, x, y)
     setmetatable(player, Player)
@@ -35,7 +25,7 @@ function Player:new(world, x, y)
     player.facingRight = true
     player.state = PlayerState.IDLE
 
-    player.animations = Animation:newAnimations(imagePaths, player.width, player.height)
+    player.animations = Animation:newAnimations("assets/Virtual Guy")
     player.body:setFixedRotation(true)
     player.shape = love.physics.newRectangleShape(0, 11, 17 * player.scale,
         24 * player.scale)
