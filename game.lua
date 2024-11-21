@@ -1,5 +1,6 @@
 local Player = require "player"
 local Enemy = require "enemy"
+local Platform = require "platform"
 
 local Game = {}
 Game.__index = Game
@@ -9,6 +10,7 @@ Play = true
 
 local player
 local enemy
+local platform
 local wall = {}
 
 local accumulator = 0
@@ -19,12 +21,14 @@ function Game:load()
     player = Player:new(World, 300, 250)
     enemy = Enemy:new(World, 500, 250)
 
-    wall.x, wall.y = 0, 400
-    wall.width, wall.height = love.graphics.getWidth(), 50
-    wall.body = love.physics.newBody(World, wall.x, wall.y, "static")
-    wall.shape = love.physics.newRectangleShape(wall.width / 2, wall.height / 2,
-        wall.width, wall.height)
-    wall.fixture = love.physics.newFixture(wall.body, wall.shape)
+    platform = Platform:new(World, 0, 400)
+
+    -- wall.x, wall.y = 0, 400
+    -- wall.width, wall.height = love.graphics.getWidth(), 50
+    -- wall.body = love.physics.newBody(World, wall.x, wall.y, "static")
+    -- wall.shape = love.physics.newRectangleShape(wall.width / 2, wall.height / 2,
+    -- wall.width, wall.height)
+    -- wall.fixture = love.physics.newFixture(wall.body, wall.shape)
 end
 
 function Game:update(dt)
@@ -47,9 +51,10 @@ end
 function Game:draw()
     player:draw()
     enemy:draw()
-    love.graphics.setColor(1, 0, 0)
-    love.graphics.polygon("line", wall.body:getWorldPoints(wall.shape:getPoints()))
-    love.graphics.setColor(1, 1, 1)
+    platform:draw()
+    -- love.graphics.setColor(1, 0, 0)
+    -- love.graphics.polygon("line", wall.body:getWorldPoints(wall.shape:getPoints()))
+    -- love.graphics.setColor(1, 1, 1)
 end
 
 function Game:keypressed(key)
