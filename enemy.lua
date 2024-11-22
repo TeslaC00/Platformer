@@ -38,6 +38,7 @@ function Enemy:update(dt)
     local right = self.facingRight
     local dx, dy = 0, 0
 
+    -- update enemy direction and speed
     if love.keyboard.isDown("left") then
         right = false
         dx = -self.speed
@@ -50,6 +51,7 @@ function Enemy:update(dt)
         dy = self.speed
     end
 
+    -- update enemy state on velocity
     if math.abs(dx) > 0 then
         state = EnemyState.WALK
     else
@@ -62,31 +64,42 @@ function Enemy:update(dt)
         self:flipX()
     end
 
+    -- update enemy state and velocity
     self.state = state
     self.body:setLinearVelocity(dx, dy)
+
     self.animations[self.state]:update(dt)
 end
 
 function Enemy:draw()
+    -- draw enemy texture with the current state and scales
     local x, y = self.body:getPosition()
     local ox, oy = self.width * 0.5, self.height * 0.5
     self.animations[self.state]:draw(x, y, 0, self.scaleX, self.scaleY, ox, oy)
 
-    -- debugging
+    --#region Debugging
     if _G.DEBUGGING then
+        -- draw origin x and y
         love.graphics.points(x, y)
         local coord = "X: " .. x .. ",Y: " .. y
         love.graphics.print(coord, x, y)
-        local x1, y1, x2, y2 = self.fixture:getBoundingBox(1)
-        love.graphics.setColor(0, 1, 0)
-        love.graphics.rectangle("line", x1, y1, x2 - x1, y2 - y1)
-        love.graphics.setColor(0, 0, 1)
+
+        -- draw texture outline
+        love.graphics.setColor(_COLORS.BLUE)
         love.graphics.rectangle("line", x - (ox * 3), y - (oy * 3), 32 * 3, 32 * 3)
-        love.graphics.setColor(1, 1, 1)
+
+        -- draw collider outline
+        love.graphics.setColor(_COLORS.GREEN)
+        love.graphics.polygon("line", self.body:getWorldPoints(self.shape:getPoints()))
+
+        -- reset color
+        love.graphics.setColor(_COLORS.WHITE)
     end
+    --#endregion Debugging
 end
 
 function Enemy:reset(x, y)
+    -- reset enemy properties
     Character.reset(self, x, y)
     self.state = EnemyState.IDLE
     self.facingRight = false

@@ -12,7 +12,7 @@ function Character:new(world, x, y)
         scaleX = _G.SCALE,
         scaleY = _G.SCALE,
         flippedX = false,
-        flippedY = false
+    flippedY = false
     }, Character)
 
     character.body = love.physics.newBody(world, x, y, "dynamic")
@@ -21,8 +21,6 @@ function Character:new(world, x, y)
 
     return character
 end
-
-function Character:update(dt) end
 
 function Character:draw()
     love.graphics.setColor(1, 1, 0)

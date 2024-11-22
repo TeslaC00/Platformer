@@ -42,6 +42,7 @@ function Player:update(dt)
     local dx, dy = 0, 0
     local debug = _G.DEBUGGING
 
+    -- update player direction and speed
     if love.keyboard.isDown("a") then
         right = false
         dx = -self.speed
@@ -58,7 +59,7 @@ function Player:update(dt)
         if debug then print("s pressed") end
     end
 
-    -- velocity code to change state
+    -- update player state on velocity
     local grounded = self.body:getY() >= 300
 
     if not grounded then
@@ -81,28 +82,38 @@ function Player:update(dt)
         self:flipX()
     end
 
+    -- update player state and velocity
     self.state = state
     self.body:setLinearVelocity(dx, dy)
+
     self.animations[self.state]:update(dt)
 end
 
 function Player:draw()
+    -- draw player texture with the current state and scales
     local x, y = self.body:getPosition()
     local ox, oy = self.width * 0.5, self.height * 0.5
     self.animations[self.state]:draw(x, y, 0, self.scaleX, self.scaleY, ox, oy)
 
-    -- debugging
+    --#region Debugging
     if _G.DEBUGGING then
+        -- draw origin x and y
         love.graphics.points(x, y)
         local coord = "X: " .. x .. ",Y: " .. y
         love.graphics.print(coord, x, y)
-        local x1, y1, x2, y2 = self.fixture:getBoundingBox(1)
-        love.graphics.setColor(0, 1, 0)
-        love.graphics.rectangle("line", x1, y1, x2 - x1, y2 - y1)
-        love.graphics.setColor(0, 0, 1)
+
+        -- draw texture outline
+        love.graphics.setColor(_COLORS.BLUE)
         love.graphics.rectangle("line", x - (ox * 3), y - (oy * 3), 32 * 3, 32 * 3)
-        love.graphics.setColor(1, 1, 1)
+
+        -- draw collider outline
+        love.graphics.setColor(_COLORS.GREEN)
+        love.graphics.polygon("line", self.body:getWorldPoints(self.shape:getPoints()))
+
+        -- reset color
+        love.graphics.setColor(_COLORS.WHITE)
     end
+    --#endregion Debugging
 end
 
 function Player:keypressed(key)
@@ -116,6 +127,7 @@ function Player:keypressed(key)
 end
 
 function Player:reset(x, y)
+    -- reset player properties
     Character.reset(self, x, y)
     self.state = PlayerState.IDLE
     self.facingRight = true
