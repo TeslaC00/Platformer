@@ -11,11 +11,11 @@ function love.load()
 
     -- ui and buttons
     local smallFont = love.graphics.newFont(16)
-    resetButton = Button:new(600, 50, 50, 20, "Reset", smallFont, _COLORS.WHITE, _COLORS.BLUE,
-        function() Game:reset() end)
-    debugButton = ToggleButton:new(700, 50, 50, 20, "Debug", smallFont, false, _COLORS.WHITE,
+    debugButton = ToggleButton:new(900, 20, 50, 20, "Debug", smallFont, false, _COLORS.WHITE,
         _COLORS.GREEN, _COLORS.RED, function(toggle) _G.DEBUGGING = toggle end)
-    playButton = ToggleButton:new(500, 50, 50, 20, "Play", smallFont, true, _COLORS.WHITE,
+    resetButton = Button:new(800, 20, 50, 20, "Reset", smallFont, _COLORS.WHITE, _COLORS.BLUE,
+        function() Game:reset() end)
+    playButton = ToggleButton:new(700, 20, 50, 20, "Play", smallFont, true, _COLORS.WHITE,
         _COLORS.GREEN, _COLORS.RED,
         function(toggle)
             local text = toggle and "Play" or "Pause"
@@ -40,6 +40,12 @@ function love.draw()
     playButton:draw()
     resetButton:draw()
     debugButton:draw()
+
+    if _G.DEBUGGING then
+        local x, y = love.mouse.getPosition()
+        local text = "X:" .. x .. " Y:" .. y
+        love.graphics.print(text, x, y - 15)
+    end
 end
 
 function love.keypressed(key)

@@ -28,10 +28,8 @@ function Player:new(world, x, y)
     player.animations = Animation:newAnimations("assets/Virtual Guy")
     player.body:setFixedRotation(true)
     player.shape = love.physics.newRectangleShape(0, 11, 17 * player.scale,
-        18 * player.scale)
-    player.fixture = love.physics.newFixture(player.body, player.shape)
-    player.fixture:setDensity(5)
-    player.body:resetMassData()
+        20 * player.scale)
+    player.fixture = love.physics.newFixture(player.body, player.shape,5)
 
     return player
 end
