@@ -25,7 +25,7 @@ function Enemy:new(world, x, y)
     enemy.state = EnemyState.IDLE
 
     enemy.animations = Animation:newAnimations("assets/AngryPig")
-    enemy.shape = love.physics.newRectangleShape(0, 6, 25 * enemy.scale, 26 * enemy.scale)
+    enemy.shape = love.physics.newRectangleShape(0, 6, 25 * enemy.scale, 22 * enemy.scale)
     enemy.fixture = love.physics.newFixture(enemy.body, enemy.shape)
     enemy.fixture:setDensity(2)
     enemy.body:resetMassData()

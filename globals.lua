@@ -1,10 +1,10 @@
 _G = {
     FPS = 60,
-    SCALE = 3,
+    SCALE = 2,
     DEBUGGING = false,
     FRAME_RATE = 1 / 60,
     FRAME_DURATION = 0.05,
-    PIXELS_PER_METER = 96,
+    PIXELS_PER_METER = 32 * 2,
     FIXED_TIME_STEP = 1 / 60
 }
 
