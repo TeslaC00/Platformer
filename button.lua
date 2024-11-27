@@ -1,7 +1,7 @@
 local Button = {}
 Button.__index = Button
 
-function Button:new(x, y, width, height, text, font, textColor, bgColor, callback)
+function Button.new(x, y, width, height, text, font, textColor, bgColor, callback)
     return setmetatable({
         x = x,
         y = y,

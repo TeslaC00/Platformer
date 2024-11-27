@@ -27,7 +27,7 @@ local function createFrames(image, frameWidth, frameHeight)
     return frames
 end
 
-function Animation:new(imagePath, frameWidth, frameHeight, frameDuration)
+function Animation.new(imagePath, frameWidth, frameHeight, frameDuration)
     local framDur = frameDuration or _G.FRAME_DURATION
     local image = love.graphics.newImage(imagePath)
     return setmetatable({
@@ -40,7 +40,7 @@ function Animation:new(imagePath, frameWidth, frameHeight, frameDuration)
     }, Animation)
 end
 
-function Animation:newAnimations(imageDir, frameDuration)
+function Animation.newAnimations(imageDir, frameDuration)
     local animations = {}
 
     local items = love.filesystem.getDirectoryItems(imageDir)
@@ -50,7 +50,7 @@ function Animation:newAnimations(imageDir, frameDuration)
         if info and info.type == "file" then
             local _, width, height = parseImageFilename(item)
             if width and height then
-                table.insert(animations, self:new(filePath, width, height, frameDuration))
+                table.insert(animations, Animation.new(filePath, width, height, frameDuration))
             end
         end
     end

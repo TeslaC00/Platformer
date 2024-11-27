@@ -12,8 +12,8 @@ local EnemyState = {
     WALK = 5
 }
 
-function Enemy:new(world, x, y)
-    local enemy = Character.new(self, world, x, y)
+function Enemy.new(world, x, y)
+    local enemy = Character.new(world, x, y)
     setmetatable(enemy, Enemy)
 
     enemy.width = 36
@@ -24,7 +24,7 @@ function Enemy:new(world, x, y)
     enemy.facingRight = false
     enemy.state = EnemyState.IDLE
 
-    enemy.animations = Animation:newAnimations("assets/AngryPig")
+    enemy.animations = Animation.newAnimations("assets/AngryPig")
     enemy.shape = love.physics.newRectangleShape(0, 6, 25 * enemy.scale, 23 * enemy.scale)
     enemy.fixture = love.physics.newFixture(enemy.body, enemy.shape, 2)
 

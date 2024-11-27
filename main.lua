@@ -11,11 +11,11 @@ function love.load()
 
     -- ui and buttons
     local smallFont = love.graphics.newFont(16)
-    debugButton = ToggleButton:new(900, 20, 50, 20, "Debug", smallFont, false, _COLORS.WHITE,
+    debugButton = ToggleButton.new(900, 20, 50, 20, "Debug", smallFont, false, _COLORS.WHITE,
         _COLORS.GREEN, _COLORS.RED, function(toggle) _G.DEBUGGING = toggle end)
-    resetButton = Button:new(800, 20, 50, 20, "Reset", smallFont, _COLORS.WHITE, _COLORS.BLUE,
+    resetButton = Button.new(800, 20, 50, 20, "Reset", smallFont, _COLORS.WHITE, _COLORS.BLUE,
         function() Game:reset() end)
-    playButton = ToggleButton:new(700, 20, 50, 20, "Play", smallFont, true, _COLORS.WHITE,
+    playButton = ToggleButton.new(700, 20, 50, 20, "Play", smallFont, true, _COLORS.WHITE,
         _COLORS.GREEN, _COLORS.RED,
         function(toggle)
             local text = toggle and "Play" or "Pause"

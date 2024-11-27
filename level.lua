@@ -15,8 +15,8 @@ local function createTiles(image, tileWidth, tileHeight)
     return tiles
 end
 
-function Level:new(world)
-    local baseLevel = require "base-level-v1"
+function Level.new(world)
+    local baseLevel = require "assets.levels.base-level-v1"
     local image = love.graphics.newImage("assets/Terrain_16x16.png")
     local level = setmetatable({
         image = image,

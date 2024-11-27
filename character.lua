@@ -1,7 +1,7 @@
 local Character = {}
 Character.__index = Character
 
-function Character:new(world, x, y)
+function Character.new(world, x, y)
     local character = setmetatable({
         width = 32,
         height = 32,

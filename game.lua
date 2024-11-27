@@ -19,9 +19,9 @@ local fixedTimeStep = _G.FIXED_TIME_STEP
 
 function Game:load()
     -- player entities and world
-    player = Player:new(World, 300, 100)
-    enemy = Enemy:new(World, 700, 250)
-    level = Level:new(World)
+    player = Player.new(World, 300, 100)
+    enemy = Enemy.new(World, 700, 250)
+    level = Level.new(World)
     camera = Camera:new()
 end
 

@@ -3,10 +3,9 @@ local Button = require "button"
 local ToggleButton = setmetatable({}, { __index = Button })
 ToggleButton.__index = ToggleButton
 
-function ToggleButton:new(x, y, width, height, text, font, on, textColor, onColor, offColor, callback)
+function ToggleButton.new(x, y, width, height, text, font, on, textColor, onColor, offColor, callback)
     local bgColor = onColor and on or offColor
-    local toggleButton = Button.new(self, x, y, width, height, text, font, textColor, bgColor,
-        callback)
+    local toggleButton = Button.new(x, y, width, height, text, font, textColor, bgColor, callback)
     toggleButton.on = on or false
     toggleButton.onColor = onColor
     toggleButton.offColor = offColor

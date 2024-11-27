@@ -14,8 +14,8 @@ local PlayerState = {
     WALL_JUMP = 7
 }
 
-function Player:new(world, x, y)
-    local player = Character.new(self, world, x, y)
+function Player.new(world, x, y)
+    local player = Character.new(world, x, y)
     setmetatable(player, Player)
 
     player.xOffset = 7
@@ -25,7 +25,7 @@ function Player:new(world, x, y)
     player.facingRight = true
     player.state = PlayerState.IDLE
 
-    player.animations = Animation:newAnimations("assets/Virtual Guy")
+    player.animations = Animation.newAnimations("assets/Virtual Guy")
     player.body:setFixedRotation(true)
     player.shape = love.physics.newRectangleShape(0, 11, 17 * player.scale,
         20 * player.scale)

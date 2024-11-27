@@ -1,7 +1,7 @@
 local Camera = {}
 Camera.__index = Camera
 
-function Camera:new()
+function Camera.new()
     return setmetatable({
         x = 0,
         y = 0,
