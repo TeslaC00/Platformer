@@ -16,7 +16,7 @@ local function createTiles(image, tileWidth, tileHeight)
 end
 
 function Level:new(world)
-    local baseLevel = require "base-level"
+    local baseLevel = require "base-level-v1"
     local image = love.graphics.newImage("assets/Terrain_16x16.png")
     local level = setmetatable({
         image = image,
@@ -65,6 +65,14 @@ function Level:draw()
         love.graphics.setColor(_COLORS.WHITE)
     end
     --#endregion Debugging
+end
+
+function Level:getWidth()
+    return self.baseLevel.tilewidth * self.baseLevel.layers[1].width * _G.SCALE
+end
+
+function Level:getHeight()
+    return self.baseLevel.tileheight * self.baseLevel.layers[1].height * _G.SCALE
 end
 
 return Level

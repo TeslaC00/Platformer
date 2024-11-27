@@ -96,9 +96,9 @@ function Enemy:draw()
     --#endregion Debugging
 end
 
-function Enemy:reset(x, y)
+function Enemy:reset()
     -- reset enemy properties
-    Character.reset(self, x, y)
+    Character.reset(self)
     self.state = EnemyState.IDLE
     self.facingRight = false
 end

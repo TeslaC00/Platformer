@@ -124,9 +124,9 @@ function Player:keypressed(key)
     end
 end
 
-function Player:reset(x, y)
+function Player:reset()
     -- reset player properties
-    Character.reset(self, x, y)
+    Character.reset(self)
     self.state = PlayerState.IDLE
     self.facingRight = true
 end

@@ -1,6 +1,7 @@
 local Player = require "player"
 local Enemy = require "enemy"
 local Level = require "level"
+local Camera = require "camera"
 
 local Game = {}
 Game.__index = Game
@@ -11,16 +12,17 @@ Play = true
 local player
 local enemy
 local level
+local camera
 
 local accumulator = 0
 local fixedTimeStep = _G.FIXED_TIME_STEP
 
 function Game:load()
     -- player entities and world
-    player = Player:new(World, 300, 250)
+    player = Player:new(World, 300, 100)
     enemy = Enemy:new(World, 700, 250)
-
     level = Level:new(World)
+    camera = Camera:new()
 end
 
 function Game:update(dt)
@@ -38,12 +40,18 @@ function Game:update(dt)
 
         accumulator = accumulator - fixedTimeStep
     end
+    camera:setPosition(player.body:getPosition())
 end
 
 function Game:draw()
+    -- local ox = player.body:getX() - love.graphics.getWidth() * 0.5
+    -- local oy = player.body:getY() - love.graphics.getHeight() * 0.5
+    camera:apply()
     level:draw()
     player:draw()
     enemy:draw()
+
+    camera:remove()
 end
 
 function Game:keypressed(key)
@@ -55,8 +63,8 @@ function Game:playPause()
 end
 
 function Game:reset()
-    player:reset(300, 250)
-    enemy:reset(700, 250)
+    player:reset()
+    enemy:reset()
 end
 
 return Game

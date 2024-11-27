@@ -5,8 +5,8 @@ function Character:new(world, x, y)
     local character = setmetatable({
         width = 32,
         height = 32,
-        -- x = x,
-        -- y = y,
+        x = x,
+        y = y,
         speed = 100,
         scale = _G.SCALE,
         scaleX = _G.SCALE,
@@ -27,8 +27,8 @@ function Character:draw()
     love.graphics.rectangle("line", self.x, self.y, self.width, self.height, self.scale, self.scale)
 end
 
-function Character:reset(x, y)
-    self.body:setPosition(x, y)
+function Character:reset()
+    self.body:setPosition(self.x, self.y)
     self.body:setLinearVelocity(0, 0)
     self.body:setAngularVelocity(0)
     self.body:setAngle(0)
