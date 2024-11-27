@@ -1,7 +1,7 @@
-local Player = require "player"
-local Enemy = require "enemy"
-local Level = require "level"
-local Camera = require "camera"
+local Player = require "entities.player"
+local Enemy = require "entities.enemy"
+local Level = require "systems.level"
+local Camera = require "systems.camera"
 
 local Game = {}
 Game.__index = Game

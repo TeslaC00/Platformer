@@ -1,5 +1,5 @@
 local Character = require "character"
-local Animation = require "animation"
+local Animation = require "systems.animation"
 
 local Enemy = setmetatable({}, { __index = Character })
 Enemy.__index = Enemy

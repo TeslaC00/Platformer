@@ -1,7 +1,7 @@
 require "globals"
-local Game = require "game"
-local ToggleButton = require "toggle-button"
-local Button = require "button"
+local Game = require "systems.game"
+local ToggleButton = require "ui.toggle-button"
+local Button = require "ui.button"
 
 local debugButton, resetButton, playButton
 
