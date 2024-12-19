@@ -1,4 +1,4 @@
-local Button = require "button"
+local Button = require "ui.button"
 
 local ToggleButton = setmetatable({}, { __index = Button })
 ToggleButton.__index = ToggleButton
