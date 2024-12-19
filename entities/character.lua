@@ -3,10 +3,10 @@ Character.__index = Character
 
 function Character.new(world, x, y)
     local character = setmetatable({
-        width = 32,
-        height = 32,
         x = x,
         y = y,
+        width = 32,
+        height = 32,
         speed = 100,
         scale = _G.SCALE,
         scaleX = _G.SCALE,
