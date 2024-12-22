@@ -24,12 +24,18 @@ function Player.new(world, x, y)
     player.jump = 400
     player.facingRight = true
     player.state = PlayerState.IDLE
+    player.onGround = false
 
     player.animations = Animation.newAnimations("assets/Virtual Guy")
     player.body:setFixedRotation(true)
-    player.shape = love.physics.newRectangleShape(0, 11, 17 * player.scale,
-        20 * player.scale)
-    player.fixture = love.physics.newFixture(player.body, player.shape,5)
+    player.shape = love.physics.newRectangleShape(0, 9, 17 * player.scale,
+        18 * player.scale)
+    player.groundColliderShape = love.physics.newRectangleShape(0, 26, 13 * player.scale,
+        2 * player.scale)
+    player.fixture = love.physics.newFixture(player.body, player.shape, 5)
+    player.fixture:setUserData("player_body_hitbox")
+    player.groundColliderFixture = love.physics.newFixture(player.body, player.groundColliderShape, 5)
+    player.groundColliderFixture:setUserData("player_ground_hitbox")
 
     return player
 end
@@ -58,12 +64,12 @@ function Player:update(dt)
     end
 
     -- update player state on velocity
-    local grounded = self.body:getY() >= 300
+    local grounded = self.onGround
 
     if not grounded then
         if dy < 0 then
             state = PlayerState.JUMP
-        elseif dy > 0 then
+        elseif dy >= 0 then
             state = PlayerState.FALL
         end
     else
@@ -85,6 +91,11 @@ function Player:update(dt)
     self.body:setLinearVelocity(dx, dy)
 
     self.animations[self.state]:update(dt)
+    if debug then
+        print("Gounded: ", grounded)
+        print("dy: ", dy)
+    end
+    -- print(state,self.state,dx,math.abs(dx))
 end
 
 function Player:draw()
@@ -108,6 +119,10 @@ function Player:draw()
         love.graphics.setColor(_COLORS.GREEN)
         love.graphics.polygon("line", self.body:getWorldPoints(self.shape:getPoints()))
 
+        -- draw ground collider outline
+        love.graphics.setColor(_COLORS.RED)
+        love.graphics.polygon("line", self.body:getWorldPoints(self.groundColliderShape:getPoints()))
+
         -- reset color
         love.graphics.setColor(_COLORS.WHITE)
     end
@@ -129,6 +144,7 @@ function Player:reset()
     Character.reset(self)
     self.state = PlayerState.IDLE
     self.facingRight = true
+    self.onGround = false
 end
 
 return Player

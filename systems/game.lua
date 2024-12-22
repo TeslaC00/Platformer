@@ -3,26 +3,25 @@ local Enemy = require "entities.enemy"
 local Level = require "systems.level"
 local Camera = require "systems.camera"
 
-local Game = {}
-Game.__index = Game
-
-World = love.physics.newWorld(0, _G.PIXELS_PER_METER * 60, true)
 Play = true
 
-local player
-local enemy
-local level
-local camera
+local Game = {}
+Game.__index = Game
 
 local accumulator = 0
 local fixedTimeStep = _G.FIXED_TIME_STEP
 
 function Game:load()
     -- player entities and world
-    player = Player.new(World, 300, 100)
-    enemy = Enemy.new(World, 700, 250)
-    level = Level.new(World)
-    camera = Camera:new()
+    self.world = love.physics.newWorld(0, _G.PIXELS_PER_METER * 60, true)
+    self.world:setCallbacks(
+        function(a, b, contact) self:beginContact(a, b, contact) end,
+        function(a, b, contact) self:endContact(a, b, contact) end,
+        nil, nil)
+    self.player = Player.new(self.world, 300, 200)
+    self.enemy = Enemy.new(self.world, 700, 250)
+    self.level = Level.new(self.world)
+    self.camera = Camera:new()
 end
 
 function Game:update(dt)
@@ -34,28 +33,35 @@ function Game:update(dt)
     accumulator = accumulator + dt
 
     while accumulator >= fixedTimeStep do
-        World:update(fixedTimeStep)
-        player:update(fixedTimeStep)
-        enemy:update(fixedTimeStep)
+        self.world:update(fixedTimeStep)
+        self.player:update(fixedTimeStep)
+        self.enemy:update(fixedTimeStep)
+
+        for n in love.event.poll() do
+            print("Event: ", n)
+            if n == "player_on_ground" then
+                love.event.clear()
+            elseif n == "player_not_on_ground" then
+                love.event.clear()
+            end
+        end
 
         accumulator = accumulator - fixedTimeStep
     end
-    camera:setPosition(player.body:getPosition())
+    self.camera:setPosition(self.player.body:getPosition())
 end
 
 function Game:draw()
-    -- local ox = player.body:getX() - love.graphics.getWidth() * 0.5
-    -- local oy = player.body:getY() - love.graphics.getHeight() * 0.5
-    camera:apply()
-    level:draw()
-    player:draw()
-    enemy:draw()
+    self.camera:apply()
+    self.level:draw()
+    self.player:draw()
+    self.enemy:draw()
 
-    camera:remove()
+    self.camera:remove()
 end
 
 function Game:keypressed(key)
-    player:keypressed(key)
+    self.player:keypressed(key)
 end
 
 function Game:playPause()
@@ -63,8 +69,34 @@ function Game:playPause()
 end
 
 function Game:reset()
-    player:reset()
-    enemy:reset()
+    self.player:reset()
+    self.enemy:reset()
+end
+
+function Game:beginContact(a, b, contact)
+    -- Gets called when two fixtures begin to overlap
+    local fixtureA = a:getUserData()
+    local fixtureB = b:getUserData()
+
+    if _G.DEBUGGING then print("Collision detected between:", fixtureA, " and ", fixtureB) end
+
+    if fixtureA == "player_ground_hitbox" or fixtureB == "player_ground_hitbox" then
+        self.player.onGround = true
+        if _G.DEBUGGING then print("Starting Collision fixtureA: ", fixtureA, " and fixtureB: ", fixtureB) end
+    end
+end
+
+function Game:endContact(a, b, contact)
+    -- Gets called when two fixtures cease to overlap. This will also be called outside of a world update, when colliding objects are destroyed
+    local fixtureA = a:getUserData()
+    local fixtureB = b:getUserData()
+
+    if _G.DEBUGGING then print("Ending Collision fixtureA: ", fixtureA, " and fixtureB: ", fixtureB) end
+
+    if fixtureA == "player_ground_hitbox" or fixtureB == "player_ground_hitbox" then
+        self.player.onGround = false
+        if _G.DEBUGGING then print("Ending Collision fixtureA: ", fixtureA, " and fixtureB: ", fixtureB) end
+    end
 end
 
 return Game
