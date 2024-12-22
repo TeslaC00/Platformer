@@ -1,10 +1,12 @@
 local Camera = {}
 Camera.__index = Camera
 
-function Camera.new()
+function Camera.new(x, y)
     return setmetatable({
-        x = 0,
-        y = 0,
+        startX = x,
+        startY = y,
+        x = x,
+        y = y,
         scaleX = 1,
         scaleY = 1,
         rotation = 0
@@ -35,6 +37,11 @@ end
 
 function Camera:remove()
     love.graphics.pop()
+end
+
+function Camera:reset()
+    self.x = self.startX
+    self.y = self.startY
 end
 
 return Camera

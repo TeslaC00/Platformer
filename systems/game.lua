@@ -21,7 +21,7 @@ function Game:load()
     self.player = Player.new(self.world, 300, 200)
     self.enemy = Enemy.new(self.world, 700, 250)
     self.level = Level.new(self.world)
-    self.camera = Camera:new()
+    self.camera = Camera.new(300, 200)
 end
 
 function Game:update(dt)
@@ -71,6 +71,7 @@ end
 function Game:reset()
     self.player:reset()
     self.enemy:reset()
+    self.camera:reset()
 end
 
 function Game:beginContact(a, b, contact)
