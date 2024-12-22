@@ -5,13 +5,13 @@ local Player = setmetatable({}, { __index = Character })
 Player.__index = Player
 
 local PlayerState = {
-    DOUBLE_JUMP = 1,
-    FALL = 2,
-    HIT = 3,
-    IDLE = 4,
-    JUMP = 5,
-    RUN = 6,
-    WALL_JUMP = 7
+    DOUBLE_JUMP = "DoubleJump",
+    FALL = "Fall",
+    HIT = "Hit",
+    IDLE = "Idle",
+    JUMP = "Jump",
+    RUN = "Run",
+    WALL_JUMP = "WallJump"
 }
 
 function Player.new(world, x, y)

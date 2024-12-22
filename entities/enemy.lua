@@ -5,11 +5,11 @@ local Enemy = setmetatable({}, { __index = Character })
 Enemy.__index = Enemy
 
 local EnemyState = {
-    HIT_1 = 1,
-    HIT_2 = 2,
-    IDLE = 3,
-    RUN = 4,
-    WALK = 5
+    HIT_1 = "HIT1",
+    HIT_2 = "HIT2",
+    IDLE = "Idle",
+    RUN = "Run",
+    WALK = "Walk"
 }
 
 function Enemy.new(world, x, y)

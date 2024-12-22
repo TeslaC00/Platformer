@@ -48,9 +48,10 @@ function Animation.newAnimations(imageDir, frameDuration)
         local filePath = imageDir .. "/" .. item
         local info = love.filesystem.getInfo(filePath)
         if info and info.type == "file" then
-            local _, width, height = parseImageFilename(item)
-            if width and height then
-                table.insert(animations, Animation.new(filePath, width, height, frameDuration))
+            local name, width, height = parseImageFilename(item)
+            if name and width and height then
+                animations[name] = Animation.new(filePath, width, height, frameDuration)
+                -- table.insert(animations, Animation.new(filePath, width, height, frameDuration))
             end
         end
     end
