@@ -4,6 +4,11 @@ local Animation = require "systems.animation"
 local Player = setmetatable({}, { __index = Character })
 Player.__index = Player
 
+--#region Player Constants
+local JUMP = 300
+local RUN_SPEED = 120
+local SCALE = 2
+
 local PlayerState = {
     DOUBLE_JUMP = "DoubleJump",
     FALL = "Fall",
@@ -14,88 +19,133 @@ local PlayerState = {
     WALL_JUMP = "WallJump"
 }
 
+local PlayerDir = {
+    RIGHT = "right",
+    LEFT = "left"
+}
+--#endregion
+
 function Player.new(world, x, y)
     local player = Character.new(world, x, y)
     setmetatable(player, Player)
 
     player.xOffset = 7
     player.yOffset = 6
-    player.speed = 150
-    player.jump = 400
-    player.facingRight = true
-    player.state = PlayerState.IDLE
     player.onGround = false
+    player.state = PlayerState.IDLE
+    player.direction = PlayerDir.RIGHT
+
+    -- physics
+    player.dx = 0
+    player.dy = 0
+    player.world = world
 
     player.animations = Animation.newAnimations("assets/Virtual Guy")
     player.body:setFixedRotation(true)
-    player.shape = love.physics.newRectangleShape(0, 9, 17 * player.scale,
-        18 * player.scale)
-    player.groundColliderShape = love.physics.newRectangleShape(0, 26, 13 * player.scale,
+    player.shape = love.physics.newRectangleShape(0, 9, 17 * player.scale, 18 * player.scale)
+    player.groundHitboxShape = love.physics.newRectangleShape(0, 26, 16 * player.scale,
         2 * player.scale)
     player.fixture = love.physics.newFixture(player.body, player.shape, 5)
     player.fixture:setUserData("player_body_hitbox")
-    player.groundColliderFixture = love.physics.newFixture(player.body, player.groundColliderShape, 5)
-    player.groundColliderFixture:setUserData("player_ground_hitbox")
+    player.groundHitboxFixture = love.physics.newFixture(player.body, player.groundHitboxShape, 5)
+    player.groundHitboxFixture:setUserData("player_ground_hitbox")
+
+    --#region Actions
+    player.actions = {
+
+        --#region Idle Action
+        [PlayerState.IDLE] = function(dt)
+            if not player.onGround then
+                player.state = PlayerState.FALL
+            elseif love.keyboard.wasPressed('space') and player.onGround then
+                player.dy = -JUMP
+                player.state = PlayerState.JUMP
+            elseif love.keyboard.isDown("a") then
+                player.dx = -RUN_SPEED
+                player.state = PlayerState.RUN
+                player.direction = PlayerDir.LEFT
+            elseif love.keyboard.isDown("d") then
+                player.dx = RUN_SPEED
+                player.state = PlayerState.RUN
+                player.direction = PlayerDir.RIGHT
+            else
+                player.dx = 0
+            end
+        end,
+        --#endregion
+
+        --#region Run Action
+        [PlayerState.RUN] = function(dt)
+            if not player.onGround then
+                player.state = PlayerState.FALL
+            elseif love.keyboard.wasPressed('space') and player.onGround then
+                player.dy = -JUMP
+                player.state = PlayerState.JUMP
+            elseif love.keyboard.isDown("a") then
+                player.dx = -RUN_SPEED
+                player.direction = PlayerDir.LEFT
+            elseif love.keyboard.isDown("d") then
+                player.dx = RUN_SPEED
+                player.direction = PlayerDir.RIGHT
+            else
+                player.dx = 0
+                player.state = PlayerState.IDLE
+            end
+        end,
+        --#endregion
+
+        --#region Jump Action
+        [PlayerState.JUMP] = function(dt)
+            if love.keyboard.isDown("a") then
+                player.dx = -RUN_SPEED
+                player.direction = PlayerDir.LEFT
+            elseif love.keyboard.isDown("d") then
+                player.dx = RUN_SPEED
+                player.direction = PlayerDir.RIGHT
+            end
+
+            if player.dy > 0 then
+                player.state = PlayerState.FALL
+            end
+        end,
+        --#endregion
+
+        --#region Fall Action
+        [PlayerState.FALL] = function(dt)
+            if love.keyboard.isDown("a") then
+                player.dx = -RUN_SPEED
+                player.direction = PlayerDir.LEFT
+            elseif love.keyboard.isDown("d") then
+                player.dx = RUN_SPEED
+                player.direction = PlayerDir.RIGHT
+            end
+
+            if player.dy >= 0 and player.onGround then
+                player.state = PlayerState.IDLE
+            end
+        end
+        --#endregion
+    }
+    --#endregion
 
     return player
 end
 
 function Player:update(dt)
-    local state = self.state
-    local right = self.facingRight
-    local dx, dy = 0, 0
-    local debug = _G.DEBUGGING
+    local dx, dy = self.body:getLinearVelocity()
+    self.dx, self.dy = dx, dy
 
-    -- update player direction and speed
-    if love.keyboard.isDown("a") then
-        right = false
-        dx = -self.speed
-        if debug then print("a pressed") end
-    elseif love.keyboard.isDown("d") then
-        right = true
-        dx = self.speed
-        if debug then print("d pressed") end
-    elseif love.keyboard.isDown("w") then
-        dy = -self.speed
-        if debug then print("w pressed") end
-    elseif love.keyboard.isDown("s") then
-        dy = self.speed
-        if debug then print("s pressed") end
-    end
+    self.actions[self.state](dt)
 
-    -- update player state on velocity
-    local grounded = self.onGround
-
-    if not grounded then
-        if dy < 0 then
-            state = PlayerState.JUMP
-        elseif dy >= 0 then
-            state = PlayerState.FALL
-        end
+    if self.direction == PlayerDir.LEFT then
+        self.scaleX = -SCALE
     else
-        if math.abs(dx) > 0 then
-            state = PlayerState.RUN
-        else
-            state = PlayerState.IDLE
-        end
+        self.scaleX = SCALE
     end
-
-    -- finalize transformations
-    if self.facingRight ~= right then
-        self.facingRight = right
-        self:flipX()
-    end
-
-    -- update player state and velocity
-    self.state = state
-    self.body:setLinearVelocity(dx, dy)
 
     self.animations[self.state]:update(dt)
-    if debug then
-        print("Gounded: ", grounded)
-        print("dy: ", dy)
-    end
-    -- print(state,self.state,dx,math.abs(dx))
+
+    self.body:setLinearVelocity(self.dx, self.dy)
 end
 
 function Player:draw()
@@ -129,21 +179,11 @@ function Player:draw()
     --#endregion Debugging
 end
 
-function Player:keypressed(key)
-    local debug = _G.DEBUGGING
-    if key == "space" then
-        if debug then print("space pressed") end
-        if self.state == PlayerState.IDLE or self.state == PlayerState.RUN then
-            self.state = PlayerState.JUMP
-        end
-    end
-end
-
 function Player:reset()
     -- reset player properties
     Character.reset(self)
     self.state = PlayerState.IDLE
-    self.facingRight = true
+    self.direction = PlayerDir.RIGHT
     self.onGround = false
 end
 

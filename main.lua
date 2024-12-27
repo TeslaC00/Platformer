@@ -2,6 +2,10 @@ require "globals"
 local Game = require "systems.game"
 local Menu = require "systems.menu"
 
+-- global key-handling
+love.keyboard.keysPressed = {}
+love.keyboard.keysReleased = {}
+
 function love.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
     love.physics.setMeter(_G.PIXELS_PER_METER)
@@ -10,9 +14,29 @@ function love.load()
     Game:load()
 end
 
+function love.keyboard.wasPressed(key)
+    if love.keyboard.keysPressed[key] then
+        return true
+    else
+        return false
+    end
+end
+
+function love.keyboard.wasReleased(key)
+    if love.keyboard.keysReleased[key] then
+        return true
+    else
+        return false
+    end
+end
+
 function love.update(dt)
     Game:update(dt)
     Menu:update(dt)
+
+    -- reset all keys pressed and released
+    love.keyboard.keysPressed = {}
+    love.keyboard.keysReleased = {}
 end
 
 function love.draw()
@@ -27,5 +51,9 @@ function love.draw()
 end
 
 function love.keypressed(key)
-    Game:keypressed(key)
+    love.keyboard.keysPressed[key] = true
+end
+
+function love.keyreleased(key)
+    love.keyboard.keysReleased[key] = true
 end
