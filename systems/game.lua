@@ -3,8 +3,6 @@ local Enemy = require "entities.enemy"
 local Level = require "systems.level"
 local Camera = require "systems.camera"
 
-Play = true
-
 local Game = {}
 Game.__index = Game
 
@@ -13,20 +11,21 @@ local fixedTimeStep = _G.FIXED_TIME_STEP
 
 function Game:load()
     -- player entities and world
-    self.world = love.physics.newWorld(0, _G.PIXELS_PER_METER * 60, true)
+    self.playing = true
+    self.world = love.physics.newWorld(0, _G.PIXELS_PER_METER * 8, true)
     self.world:setCallbacks(
         function(a, b, contact) self:beginContact(a, b, contact) end,
         function(a, b, contact) self:endContact(a, b, contact) end,
         nil, nil)
-    self.player = Player.new(self.world, 300, 200)
+    self.player = Player.new(self.world, 200, 100)
     self.enemy = Enemy.new(self.world, 700, 250)
     self.level = Level.new(self.world)
     self.camera = Camera.new(300, 200)
 end
 
 function Game:update(dt)
-    Play = love.window.hasFocus() and Play
-    if not Play then return end
+    -- Play = love.window.hasFocus() and Play
+    if not self.playing then return end
 
     -- clamp delta time to avoid large updates
     if dt > 0.1 then dt = 0.1 end
@@ -36,15 +35,6 @@ function Game:update(dt)
         self.world:update(fixedTimeStep)
         self.player:update(fixedTimeStep)
         self.enemy:update(fixedTimeStep)
-
-        for n in love.event.poll() do
-            print("Event: ", n)
-            if n == "player_on_ground" then
-                love.event.clear()
-            elseif n == "player_not_on_ground" then
-                love.event.clear()
-            end
-        end
 
         accumulator = accumulator - fixedTimeStep
     end
@@ -60,12 +50,12 @@ function Game:draw()
     self.camera:remove()
 end
 
-function Game:keypressed(key)
-    self.player:keypressed(key)
+function Game:play()
+    self.playing = true
 end
 
-function Game:playPause()
-    Play = not Play
+function Game:pause()
+    self.playing = false
 end
 
 function Game:reset()

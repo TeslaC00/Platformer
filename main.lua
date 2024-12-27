@@ -14,6 +14,10 @@ function love.load()
     Game:load()
 end
 
+function love.mousepressed(x, y, button, isTouch)
+    Menu:mousepressed(x, y, button, isTouch)
+end
+
 function love.keyboard.wasPressed(key)
     if love.keyboard.keysPressed[key] then
         return true
