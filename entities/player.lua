@@ -5,9 +5,11 @@ local Player = setmetatable({}, { __index = Character })
 Player.__index = Player
 
 --#region Player Constants
-local JUMP = 300
-local RUN_SPEED = 120
-local SCALE = _G.SCALE
+local constants = {
+    JUMP = 300,
+    RUN_SPEED = 120,
+    SCALE = _G.SCALE
+}
 
 local PlayerState = {
     DOUBLE_JUMP = "DoubleJump",
@@ -28,6 +30,8 @@ local PlayerDir = {
 function Player.new(world, x, y)
     local player = Character.new(world, x, y)
     setmetatable(player, Player)
+
+    player.constants = constants
 
     player.xOffset = 7
     player.yOffset = 6
@@ -58,14 +62,14 @@ function Player.new(world, x, y)
             if not player.onGround then
                 player.state = PlayerState.FALL
             elseif love.keyboard.wasPressed('space') and player.onGround then
-                player.dy = -JUMP
+                player.dy = -player.constants.JUMP
                 player.state = PlayerState.JUMP
             elseif love.keyboard.isDown("a") then
-                player.dx = -RUN_SPEED
+                player.dx = -player.constants.RUN_SPEED
                 player.state = PlayerState.RUN
                 player.direction = PlayerDir.LEFT
             elseif love.keyboard.isDown("d") then
-                player.dx = RUN_SPEED
+                player.dx = player.constants.RUN_SPEED
                 player.state = PlayerState.RUN
                 player.direction = PlayerDir.RIGHT
             else
@@ -79,13 +83,13 @@ function Player.new(world, x, y)
             if not player.onGround then
                 player.state = PlayerState.FALL
             elseif love.keyboard.wasPressed('space') and player.onGround then
-                player.dy = -JUMP
+                player.dy = -player.constants.JUMP
                 player.state = PlayerState.JUMP
             elseif love.keyboard.isDown("a") then
-                player.dx = -RUN_SPEED
+                player.dx = -player.constants.RUN_SPEED
                 player.direction = PlayerDir.LEFT
             elseif love.keyboard.isDown("d") then
-                player.dx = RUN_SPEED
+                player.dx = player.constants.RUN_SPEED
                 player.direction = PlayerDir.RIGHT
             else
                 player.dx = 0
@@ -97,10 +101,10 @@ function Player.new(world, x, y)
         --#region Jump Action
         [PlayerState.JUMP] = function(dt)
             if love.keyboard.isDown("a") then
-                player.dx = -RUN_SPEED
+                player.dx = -player.constants.RUN_SPEED
                 player.direction = PlayerDir.LEFT
             elseif love.keyboard.isDown("d") then
-                player.dx = RUN_SPEED
+                player.dx = player.constants.RUN_SPEED
                 player.direction = PlayerDir.RIGHT
             end
 
@@ -113,10 +117,10 @@ function Player.new(world, x, y)
         --#region Fall Action
         [PlayerState.FALL] = function(dt)
             if love.keyboard.isDown("a") then
-                player.dx = -RUN_SPEED
+                player.dx = -player.constants.RUN_SPEED
                 player.direction = PlayerDir.LEFT
             elseif love.keyboard.isDown("d") then
-                player.dx = RUN_SPEED
+                player.dx = player.constants.RUN_SPEED
                 player.direction = PlayerDir.RIGHT
             end
 
@@ -138,9 +142,9 @@ function Player:update(dt)
     self.actions[self.state](dt)
 
     if self.direction == PlayerDir.LEFT then
-        self.scaleX = -SCALE
+        self.scaleX = -self.constants.SCALE
     else
-        self.scaleX = SCALE
+        self.scaleX = self.constants.SCALE
     end
 
     self.animations[self.state]:update(dt)

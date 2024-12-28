@@ -1,8 +1,8 @@
 local Button = require "ui.button"
 local Game = require "systems.game"
 
-local Menu = {}
-Menu.__index = Menu
+local DebugMenu = {}
+DebugMenu.__index = DebugMenu
 
 local buttons = {}
 
@@ -54,7 +54,7 @@ local playButtonOpts = {
     isToggle = true
 }
 
-function Menu:load()
+function DebugMenu:load()
     -- ui and buttons
     resetButton = Button.new(800, 20, 50, 20, resetButtonOpts)
     debugButton = Button.new(900, 20, 50, 20, debugButtonOpts)
@@ -65,10 +65,7 @@ function Menu:load()
     table.insert(buttons, playButton)
 end
 
-function Menu:update(dt)
-end
-
-function Menu:mousepressed(x, y, button, _)
+function DebugMenu:mousepressed(x, y, button)
     if button == 1 then
         for _, btn in pairs(buttons) do
             if btn:hover(x, y) then
@@ -78,10 +75,10 @@ function Menu:mousepressed(x, y, button, _)
     end
 end
 
-function Menu:draw()
+function DebugMenu:draw()
     for _, btn in ipairs(buttons) do
         btn:draw()
     end
 end
 
-return Menu
+return DebugMenu

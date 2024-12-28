@@ -49,5 +49,6 @@ _COLORS = {
     LAVENDER = { 0.9, 0.9, 1, 1 },
     TURQUOISE = { 0.25, 0.88, 0.82, 1 },
     INDIGO = { 0.29, 0, 0.51, 1 },
-    VIOLET = { 0.56, 0, 1, 1 }
+    VIOLET = { 0.56, 0, 1, 1 },
+    TRANSPARENT_BLACK = { 0, 0, 0, 0.7 },
 }
