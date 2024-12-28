@@ -7,7 +7,7 @@ Player.__index = Player
 --#region Player Constants
 local JUMP = 300
 local RUN_SPEED = 120
-local SCALE = 2
+local SCALE = _G.SCALE
 
 local PlayerState = {
     DOUBLE_JUMP = "DoubleJump",
@@ -42,8 +42,8 @@ function Player.new(world, x, y)
 
     player.animations = Animation.newAnimations("assets/Virtual Guy")
     player.body:setFixedRotation(true)
-    player.shape = love.physics.newRectangleShape(0, 9, 17 * player.scale, 18 * player.scale)
-    player.groundHitboxShape = love.physics.newRectangleShape(0, 26, 16 * player.scale,
+    player.shape = love.physics.newRectangleShape(0, 5, 13 * player.scale, 20 * player.scale)
+    player.groundHitboxShape = love.physics.newRectangleShape(0, 26, 13 * player.scale,
         2 * player.scale)
     player.fixture = love.physics.newFixture(player.body, player.shape, 5)
     player.fixture:setUserData("player_body_hitbox")
