@@ -10,7 +10,7 @@ function Button.new(x, y, width, height, options)
         toggled = options.toggled or false,
         callback = options.callback or nil,
         label = options.label or "Button",
-        font = options.font or love.graphics.getFont(),
+        font = options.font or love.graphics.newFont(16),
         bgColor = options.bgColor or _COLORS.BLACK,
         labelColor = options.labelColor or _COLORS.WHITE,
 

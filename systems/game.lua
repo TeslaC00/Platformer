@@ -12,7 +12,7 @@ local fixedTimeStep = _G.FIXED_TIME_STEP
 function Game:load()
     -- player entities and world
     self.playing = true
-    self.world = love.physics.newWorld(0, _G.PIXELS_PER_METER * 8, true)
+    self.world = love.physics.newWorld(0, _G.PIXELS_PER_METER * 10, true)
     self.world:setCallbacks(
         function(a, b, contact) self:beginContact(a, b, contact) end,
         function(a, b, contact) self:endContact(a, b, contact) end,
@@ -43,6 +43,7 @@ end
 
 function Game:draw()
     self.camera:apply()
+
     self.level:draw()
     self.player:draw()
     self.enemy:draw()
@@ -64,7 +65,7 @@ function Game:reset()
     self.camera:reset()
 end
 
-function Game:beginContact(a, b, contact)
+function Game:beginContact(a, b, _) -- contact parameter not used
     -- Gets called when two fixtures begin to overlap
     local fixtureA = a:getUserData()
     local fixtureB = b:getUserData()
@@ -77,7 +78,7 @@ function Game:beginContact(a, b, contact)
     end
 end
 
-function Game:endContact(a, b, contact)
+function Game:endContact(a, b, _)   -- contact parameter not used
     -- Gets called when two fixtures cease to overlap. This will also be called outside of a world update, when colliding objects are destroyed
     local fixtureA = a:getUserData()
     local fixtureB = b:getUserData()

@@ -51,7 +51,6 @@ function Animation.newAnimations(imageDir, frameDuration)
             local name, width, height = parseImageFilename(item)
             if name and width and height then
                 animations[name] = Animation.new(filePath, width, height, frameDuration)
-                -- table.insert(animations, Animation.new(filePath, width, height, frameDuration))
             end
         end
     end

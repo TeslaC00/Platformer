@@ -39,3 +39,6 @@ luac.out
 *.x86_64
 *.hex
 
+# lua runtime for lua language server
+.luarc.json
+classic.lua
