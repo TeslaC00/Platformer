@@ -27,6 +27,7 @@ function Enemy.new(world, x, y)
     enemy.animations = Animation.newAnimations("assets/AngryPig")
     enemy.shape = love.physics.newRectangleShape(0, 6, 25 * enemy.scale, 23 * enemy.scale)
     enemy.fixture = love.physics.newFixture(enemy.body, enemy.shape, 2)
+    enemy.fixture:setUserData("enemy_body_hitbox")
 
     return enemy
 end

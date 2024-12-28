@@ -35,6 +35,7 @@ function Level.new(world)
         local shape = love.physics.newRectangleShape(2 * collider.x + collider.width,
             2 * collider.y + collider.height, collider.width * 2, collider.height * 2)
         local fixture = love.physics.newFixture(level.body, shape)
+        fixture:setUserData("ground_hitbox")
         table.insert(level.fixtures, fixture)
     end
 

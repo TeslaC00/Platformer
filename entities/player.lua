@@ -171,7 +171,7 @@ function Player:draw()
 
         -- draw ground collider outline
         love.graphics.setColor(_COLORS.RED)
-        love.graphics.polygon("line", self.body:getWorldPoints(self.groundColliderShape:getPoints()))
+        love.graphics.polygon("line", self.body:getWorldPoints(self.groundHitboxShape:getPoints()))
 
         -- reset color
         love.graphics.setColor(_COLORS.WHITE)
